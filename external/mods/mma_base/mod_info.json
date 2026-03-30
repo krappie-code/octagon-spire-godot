@@ -1,0 +1,17 @@
+{
+	"mod_name": "MMA Base Cards",
+	"mod_description": "Core MMA fighting techniques for Octagon Spire",
+	"mod_version": "1.0.0",
+	"data_load": [
+		{
+			"load_path": "cards",
+			"data_type": "Card",
+			"extra_action": ""
+		},
+		{
+			"load_path": "characters",
+			"data_type": "Character",
+			"extra_action": ""
+		}
+	]
+}
