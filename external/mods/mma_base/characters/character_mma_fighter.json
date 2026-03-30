@@ -1,0 +1,19 @@
+{
+	"patch_data": {
+		"character_starting_card_object_ids": "append"
+	},
+	"properties": {
+		"character_starting_card_object_ids": [
+			"card_jab",
+			"card_jab", 
+			"card_hook",
+			"card_guard",
+			"card_guard",
+			"card_conditioning",
+			"card_double_leg_takedown"
+		],
+		"character_name": "MMA Fighter",
+		"character_description": "A well-rounded mixed martial artist with striking and grappling skills.",
+		"object_id": "character_mma_fighter"
+	}
+}
