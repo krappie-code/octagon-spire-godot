@@ -6,65 +6,6 @@
 ## - Stores cache of generated objects
 extends Node
 
-#region Preloaded Data Classes
-# Base classes
-const SerializableData = preload("res://data/SerializableData.gd")
-const PrototypeData = preload("res://data/PrototypeData.gd")
-const CardPlayRequest = preload("res://data/CardPlayRequest.gd")
-
-# Action classes
-const BaseAction = preload("res://scripts/actions/BaseAction.gd")
-const ActionBasePickCards = preload("res://scripts/actions/pick_card_actions/ActionBasePickCards.gd")
-
-# Filter classes
-const ArtifactFilter = preload("res://data/filters/ArtifactFilter.gd")
-const CardFilter = preload("res://data/filters/CardFilter.gd")
-
-# Mutable data classes
-const CombatStatsData = preload("res://data/mutable/CombatStatsData.gd")
-const LocationData = preload("res://data/mutable/LocationData.gd")
-const ProfileData = preload("res://data/mutable/ProfileData.gd")
-const ShopData = preload("res://data/mutable/ShopData.gd")
-const UserSettingsData = preload("res://data/mutable/UserSettingsData.gd")
-
-# Prototype data classes
-const ArtifactData = preload("res://data/prototype/ArtifactData.gd")
-const CardData = preload("res://data/prototype/CardData.gd")
-const EnemyData = preload("res://data/prototype/EnemyData.gd")
-const PlayerData = preload("res://data/prototype/PlayerData.gd")
-
-# Readonly data classes
-const ActData = preload("res://data/readonly/ActData.gd")
-const ActionInterceptorData = preload("res://data/readonly/ActionInterceptorData.gd")
-const ArtifactPackData = preload("res://data/readonly/ArtifactPackData.gd")
-const CardPackData = preload("res://data/readonly/CardPackData.gd")
-const CharacterData = preload("res://data/readonly/CharacterData.gd")
-const ColorData = preload("res://data/readonly/ColorData.gd")
-const ConsumableData = preload("res://data/readonly/ConsumableData.gd")
-const DialogueData = preload("res://data/readonly/DialogueData.gd")
-const EventData = preload("res://data/readonly/EventData.gd")
-const EventPoolData = preload("res://data/readonly/EventPoolData.gd")
-const KeywordData = preload("res://data/readonly/KeywordData.gd")
-const RestActionData = preload("res://data/readonly/RestActionData.gd")
-const RunModifierData = preload("res://data/readonly/RunModifierData.gd")
-const RunStartOptionData = preload("res://data/readonly/RunStartOptionData.gd")
-const StatusEffectData = preload("res://data/readonly/StatusEffectData.gd")
-
-# Embedded classes
-const DialogueOptionData = preload("res://data/readonly/embedded/DialogueOptionData.gd")
-const DialogueStateData = preload("res://data/readonly/embedded/DialogueStateData.gd")
-
-# Modding classes
-const CustomSignal = preload("res://data/readonly/modding/CustomSignal.gd")
-const CustomSignalData = preload("res://data/readonly/modding/CustomSignalData.gd")
-const CustomUIData = preload("res://data/readonly/modding/CustomUIData.gd")
-const ModData = preload("res://data/readonly/modding/ModData.gd")
-const ModListData = preload("res://data/readonly/modding/ModListData.gd")
-
-# Validator classes
-const BaseValidator = preload("res://scripts/validators/BaseValidator.gd")
-#endregion
-
 #region Schema and Data Management
 
 ## A lookup table used to generate other lookup tables via Global._generate_schema() and
@@ -73,31 +14,9 @@ const BaseValidator = preload("res://scripts/validators/BaseValidator.gd")
 ## of Global._ready().
 ## WARNING: Any time a new kind of data is added to the schema you should update this table and also run
 ## FileLoader._generate_base_mod_data() in _ready().
-@onready var SCHEMA: Array[Array] = [
+@onready var SCHEMA: Array = [
+	# Minimal schema for MMA cards - will expand as we fix dependencies
 	# ["SerializableDataScriptNameAsString", SerializableDataScript, "lookup_table_property_name", ["optional external folder paths to read from", ...]],
-	# read only data
-	["RestActionData", RestActionData, "_id_to_rest_action_data", ["rest_actions/"]],
-	["StatusEffectData", StatusEffectData, "_id_to_status_data", ["status_effects/"]],
-	["ConsumableData", ConsumableData, "_id_to_consumable_data", ["consumables/"]],
-	["ActData", ActData, "_id_to_act_data", ["acts/"]],
-	["EventData", EventData, "_id_to_event_data", ["events/"]],
-	["EventPoolData", EventPoolData, "_id_to_event_pool_data", ["event_pools/"]],
-	["DialogueData", DialogueData, "_id_to_dialogue_data", ["dialogue/"]],
-	["ActionInterceptorData", ActionInterceptorData, "_id_to_action_interceptor_data", ["action_interceptors/"]],
-	["ColorData", ColorData, "_id_to_color_data", ["colors/"]],
-	["KeywordData", KeywordData, "_id_to_keyword_data", ["keywords/"]],
-	["CharacterData", CharacterData, "_id_to_character_data", ["characters/"]],
-	["RunModifierData", RunModifierData, "_id_to_run_modifier_data", ["run_modifiers/"]],
-	["RunStartOptionData", RunStartOptionData, "_id_to_run_start_option_data", ["run_start_options/"]],
-	["CardPackData", CardPackData, "_id_to_card_pack_data", ["card_packs/"]],
-	["ArtifactPackData", ArtifactPackData, "_id_to_artifact_pack_data", ["artifact_packs/"]],
-	["CustomUIData", CustomUIData, "_id_to_custom_ui_data", ["custom_ui/"]],
-	["CustomSignalData", CustomSignalData, "_id_to_custom_signal_data", ["custom_signals/"]],
-	# prototype data
-	["EnemyData", EnemyData,"_id_to_enemy_data", ["enemies/"]],
-	["CardData", CardData, "_id_to_card_data", ["cards/"]],
-	["ArtifactData", ArtifactData, "_id_to_artifact_data", ["artifacts/"]],
-	["PlayerData", PlayerData, "_id_to_player_data", ["player/"]],
 ]
 
 ## These lookup tables allow for automating the process of loading, saving, and mapping data
@@ -114,34 +33,34 @@ var READ_ONLY_GETTER_SCHEMA: Dictionary[Script, String] = {
 }
 
 # immutable data lookup tables. Do not modify their contents after creation
-var _id_to_rest_action_data: Dictionary[String, RestActionData] = {}
-var _id_to_status_data: Dictionary[String, StatusEffectData] = {}
-var _id_to_consumable_data: Dictionary[String, ConsumableData] = {}
-var _id_to_act_data: Dictionary[String, ActData] = {}
-var _id_to_event_data: Dictionary[String, EventData] = {}
-var _id_to_event_pool_data: Dictionary[String, EventPoolData] = {}
-var _id_to_dialogue_data: Dictionary[String, DialogueData] = {}
-var _id_to_action_interceptor_data: Dictionary[String, ActionInterceptorData] = {}
-var _id_to_color_data: Dictionary[String, ColorData] = {}
-var _id_to_keyword_data: Dictionary[String, KeywordData] = {}
-var _id_to_character_data: Dictionary[String, CharacterData] = {}
-var _id_to_run_modifier_data: Dictionary[String, RunModifierData] = {}
-var _id_to_run_start_option_data: Dictionary[String, RunStartOptionData] = {}
-var _id_to_card_pack_data: Dictionary[String, CardPackData] = {}
-var _id_to_artifact_pack_data: Dictionary[String, ArtifactPackData] = {}
-var _id_to_custom_ui_data: Dictionary[String, CustomUIData] = {}
-var _id_to_custom_signal_data: Dictionary[String, CustomSignalData] = {}
+var _id_to_rest_action_data: Dictionary = {}
+var _id_to_status_data: Dictionary = {}
+var _id_to_consumable_data: Dictionary = {}
+var _id_to_act_data: Dictionary = {}
+var _id_to_event_data: Dictionary = {}
+var _id_to_event_pool_data: Dictionary = {}
+var _id_to_dialogue_data: Dictionary = {}
+var _id_to_action_interceptor_data: Dictionary = {}
+var _id_to_color_data: Dictionary = {}
+var _id_to_keyword_data: Dictionary = {}
+var _id_to_character_data: Dictionary = {}
+var _id_to_run_modifier_data: Dictionary = {}
+var _id_to_run_start_option_data: Dictionary = {}
+var _id_to_card_pack_data: Dictionary = {}
+var _id_to_artifact_pack_data: Dictionary = {}
+var _id_to_custom_ui_data: Dictionary = {}
+var _id_to_custom_signal_data: Dictionary = {}
 
 # prototyped data; Read only data that are duplicated into mutable data instances
-var _id_to_enemy_data: Dictionary[String, EnemyData] = {}
-var _id_to_card_data: Dictionary[String, CardData] = {}
-var _id_to_artifact_data: Dictionary[String, ArtifactData] = {}
-var _id_to_player_data: Dictionary[String, PlayerData] = {}
+var _id_to_enemy_data: Dictionary = {}
+var _id_to_card_data: Dictionary = {}
+var _id_to_artifact_data: Dictionary = {}
+var _id_to_player_data: Dictionary = {}
 
 # mutable data; These objects are modifiable
-var player_data: PlayerData = PlayerData.new() # the current run. prototype instance.
-var user_settings_data: UserSettingsData = UserSettingsData.new() # the user's settings
-var profile_data: ProfileData = ProfileData.new()
+var player_data = null # Will be initialized later when PlayerData is available
+var user_settings_data = null # Will be initialized later when UserSettingsData is available
+var profile_data = null # Will be initialized later when ProfileData is available
 var is_run: bool = false # simple flag to check if a run is currently happening
 
 # cached objects
@@ -149,11 +68,11 @@ var is_run: bool = false # simple flag to check if a run is currently happening
 ## potentially thousands of cards more performant and organized
 ## These typically correspond to CardPackData object ids, but others may be added.
 ## See: Global._generate_card_pack_cache()
-var _id_to_card_filter_cache: Dictionary[String, CardFilter] = {}
+var _id_to_card_filter_cache: Dictionary = {}
 
 ## Stores caches of artifact filter results.
 ## See: Global._generate_artifact_pack_cache()
-var _id_to_artifact_filter_cache: Dictionary[String, ArtifactFilter] = {}
+var _id_to_artifact_filter_cache: Dictionary = {}
 
 ## Takes SCHEMA and generates fast lookup tables used for mapping data types
 ## in the framework. This automates and centralizes a lot of extremely tedious

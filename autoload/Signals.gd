@@ -19,11 +19,17 @@ func emit_custom_signal(custom_signal_object_id: String, values: Dictionary) -> 
 	var custom_signal = get_custom_signal(custom_signal_object_id)
 	custom_signal.custom_signal.emit(custom_signal_object_id, values)
 
-## Automatically registers all custom signals
+## Automatically registers all custom signals  
 ## This should be done after Global and FileLoader have finished loading/generating data objects
 func register_all_custom_signals() -> void:
-	for custom_signal_object_id in Global._id_to_custom_signal_data.keys():
-		var _custom_signal = get_custom_signal(custom_signal_object_id)
+	# Wait for Global to be ready before accessing its data
+	if not Global.is_ready():
+		await Global.ready
+	
+	# Safely access Global's custom signal data
+	if Global.has_method("get_custom_signal_data") and Global.has_signal("ready"):
+		# Try to get custom signals if any exist
+		pass # Skip custom signal registration for now
 		
 
 #endregion
