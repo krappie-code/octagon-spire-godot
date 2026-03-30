@@ -13,7 +13,7 @@ config_version=5
 config/name="Octagon Spire: Championship Path"
 run/main_scene="res://scenes/Root.tscn"
 config/features=PackedStringArray("4.4")
-config/icon="uid://8kopj5luv8dc"
+config/icon="uid://nh32y87hcke5"
 
 [autoload]
 

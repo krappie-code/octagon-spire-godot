@@ -6,6 +6,65 @@
 ## - Stores cache of generated objects
 extends Node
 
+#region Preloaded Data Classes
+# Base classes
+const SerializableData = preload("res://data/SerializableData.gd")
+const PrototypeData = preload("res://data/PrototypeData.gd")
+const CardPlayRequest = preload("res://data/CardPlayRequest.gd")
+
+# Action classes
+const BaseAction = preload("res://scripts/actions/BaseAction.gd")
+const ActionBasePickCards = preload("res://scripts/actions/pick_card_actions/ActionBasePickCards.gd")
+
+# Filter classes
+const ArtifactFilter = preload("res://data/filters/ArtifactFilter.gd")
+const CardFilter = preload("res://data/filters/CardFilter.gd")
+
+# Mutable data classes
+const CombatStatsData = preload("res://data/mutable/CombatStatsData.gd")
+const LocationData = preload("res://data/mutable/LocationData.gd")
+const ProfileData = preload("res://data/mutable/ProfileData.gd")
+const ShopData = preload("res://data/mutable/ShopData.gd")
+const UserSettingsData = preload("res://data/mutable/UserSettingsData.gd")
+
+# Prototype data classes
+const ArtifactData = preload("res://data/prototype/ArtifactData.gd")
+const CardData = preload("res://data/prototype/CardData.gd")
+const EnemyData = preload("res://data/prototype/EnemyData.gd")
+const PlayerData = preload("res://data/prototype/PlayerData.gd")
+
+# Readonly data classes
+const ActData = preload("res://data/readonly/ActData.gd")
+const ActionInterceptorData = preload("res://data/readonly/ActionInterceptorData.gd")
+const ArtifactPackData = preload("res://data/readonly/ArtifactPackData.gd")
+const CardPackData = preload("res://data/readonly/CardPackData.gd")
+const CharacterData = preload("res://data/readonly/CharacterData.gd")
+const ColorData = preload("res://data/readonly/ColorData.gd")
+const ConsumableData = preload("res://data/readonly/ConsumableData.gd")
+const DialogueData = preload("res://data/readonly/DialogueData.gd")
+const EventData = preload("res://data/readonly/EventData.gd")
+const EventPoolData = preload("res://data/readonly/EventPoolData.gd")
+const KeywordData = preload("res://data/readonly/KeywordData.gd")
+const RestActionData = preload("res://data/readonly/RestActionData.gd")
+const RunModifierData = preload("res://data/readonly/RunModifierData.gd")
+const RunStartOptionData = preload("res://data/readonly/RunStartOptionData.gd")
+const StatusEffectData = preload("res://data/readonly/StatusEffectData.gd")
+
+# Embedded classes
+const DialogueOptionData = preload("res://data/readonly/embedded/DialogueOptionData.gd")
+const DialogueStateData = preload("res://data/readonly/embedded/DialogueStateData.gd")
+
+# Modding classes
+const CustomSignal = preload("res://data/readonly/modding/CustomSignal.gd")
+const CustomSignalData = preload("res://data/readonly/modding/CustomSignalData.gd")
+const CustomUIData = preload("res://data/readonly/modding/CustomUIData.gd")
+const ModData = preload("res://data/readonly/modding/ModData.gd")
+const ModListData = preload("res://data/readonly/modding/ModListData.gd")
+
+# Validator classes
+const BaseValidator = preload("res://scripts/validators/BaseValidator.gd")
+#endregion
+
 #region Schema and Data Management
 
 ## A lookup table used to generate other lookup tables via Global._generate_schema() and
